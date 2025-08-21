@@ -1,4 +1,7 @@
+"use client";
+
 import React, { useState, useEffect, useCallback } from 'react';
+import { enigmaStyles } from '../../styles/enigmaStyles';
 
 class EnigmaMachine {
   private static readonly ALPHABET_SIZE = 26;
@@ -158,7 +161,6 @@ const EnigmaInterface: React.FC = () => {
   const [mode, setMode] = useState<'encrypt' | 'decrypt'>('encrypt');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
-  // Initialize machine when settings change
   useEffect(() => {
     const newMachine = new EnigmaMachine(selectedRotors, reflectorType, rotorPositions);
     newMachine.setPlugboard(plugboardPairs);
@@ -208,30 +210,30 @@ const EnigmaInterface: React.FC = () => {
   const positionToLetter = (pos: number): string => String.fromCharCode(65 + pos);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-amber-100 p-4">
-      <div className="max-w-6xl mx-auto">
+    <div style={enigmaStyles.container}>
+      <div style={enigmaStyles.maxWidth}>
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-amber-900 mb-2">Enigma Machine</h1>
-          <p className="text-amber-700">World War II Encryption Device Simulator</p>
+        <div style={enigmaStyles.header}>
+          <h1 style={enigmaStyles.title}>Enigma Machine</h1>
+          <p style={enigmaStyles.subtitle}>World War II Encryption Device Simulator</p>
         </div>
 
         {/* Main Interface */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div style={enigmaStyles.grid}>
           
           {/* Left Panel - Machine Configuration */}
-          <div className="space-y-6">
+          <div style={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
             
             {/* Rotor Configuration */}
-            <div className="bg-amber-900 rounded-lg p-6 text-white shadow-xl">
-              <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <div style={enigmaStyles.panel}>
+              <h2 style={enigmaStyles.sectionTitle}>
                 ⚙️ Rotor Configuration
               </h2>
               
-              <div className="grid grid-cols-3 gap-4 mb-4">
+              <div style={enigmaStyles.rotorGrid}>
                 {selectedRotors.map((rotor, index) => (
-                  <div key={index} className="text-center">
-                    <label className="block text-sm font-medium mb-1">
+                  <div key={index} style={enigmaStyles.rotorItem}>
+                    <label style={enigmaStyles.label}>
                       Rotor {index + 1}
                     </label>
                     <select
@@ -242,7 +244,7 @@ const EnigmaInterface: React.FC = () => {
                         newRotors[index] = isNaN(Number(value)) ? value : Number(value);
                         setSelectedRotors(newRotors);
                       }}
-                      className="w-full bg-amber-800 border border-amber-600 rounded px-2 py-1 text-center"
+                      style={enigmaStyles.select}
                     >
                       {EnigmaMachine.getAvailableRotors().map(rotorId => (
                         <option key={rotorId} value={rotorId}>{rotorId}</option>
@@ -253,13 +255,13 @@ const EnigmaInterface: React.FC = () => {
               </div>
 
               {/* Rotor Positions */}
-              <div className="grid grid-cols-3 gap-4">
+              <div style={enigmaStyles.rotorGrid}>
                 {rotorPositions.map((position, index) => (
-                  <div key={index} className="text-center">
-                    <label className="block text-sm font-medium mb-1">
+                  <div key={index} style={enigmaStyles.rotorItem}>
+                    <label style={enigmaStyles.label}>
                       Position
                     </label>
-                    <div className="relative">
+                    <div>
                       <input
                         type="range"
                         min="0"
@@ -270,9 +272,9 @@ const EnigmaInterface: React.FC = () => {
                           newPositions[index] = parseInt(e.target.value);
                           setRotorPositions(newPositions);
                         }}
-                        className="w-full"
+                        style={enigmaStyles.slider}
                       />
-                      <div className="text-center mt-1 font-mono text-lg">
+                      <div style={enigmaStyles.positionDisplay}>
                         {positionToLetter(position)}
                       </div>
                     </div>
@@ -282,12 +284,12 @@ const EnigmaInterface: React.FC = () => {
             </div>
 
             {/* Reflector Selection */}
-            <div className="bg-amber-800 rounded-lg p-4 text-white">
-              <h3 className="text-lg font-semibold mb-3">🔄 Reflector</h3>
+            <div style={{...enigmaStyles.panel, backgroundColor: '#92400e'}}>
+              <h3 style={{...enigmaStyles.sectionTitle, fontSize: '1.125rem'}}>🔄 Reflector</h3>
               <select
                 value={reflectorType}
                 onChange={(e) => setReflectorType(e.target.value)}
-                className="w-full bg-amber-700 border border-amber-600 rounded px-3 py-2"
+                style={enigmaStyles.whiteSelect}
               >
                 {EnigmaMachine.getAvailableReflectors().map(reflector => (
                   <option key={reflector} value={reflector}>Type {reflector}</option>
@@ -296,33 +298,33 @@ const EnigmaInterface: React.FC = () => {
             </div>
 
             {/* Plugboard */}
-            <div className="bg-amber-800 rounded-lg p-4 text-white">
-              <h3 className="text-lg font-semibold mb-3">🔌 Plugboard</h3>
+            <div style={{...enigmaStyles.panel, backgroundColor: '#92400e'}}>
+              <h3 style={{...enigmaStyles.sectionTitle, fontSize: '1.125rem'}}>🔌 Plugboard</h3>
               
-              <div className="flex gap-2 mb-3">
+              <div style={enigmaStyles.plugRow}>
                 <input
                   type="text"
                   value={newPlugPair}
                   onChange={(e) => setNewPlugPair(e.target.value.toUpperCase().slice(0, 2))}
                   placeholder="AB"
-                  className="flex-1 bg-amber-700 border border-amber-600 rounded px-3 py-2 text-center font-mono"
+                  style={enigmaStyles.plugInput}
                   maxLength={2}
                 />
                 <button
                   onClick={addPlugboardPair}
-                  className="bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded font-medium transition-colors"
+                  style={enigmaStyles.addButton}
                 >
                   Add
                 </button>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <div style={enigmaStyles.plugChips}>
                 {plugboardPairs.map((pair, index) => (
-                  <div key={index} className="bg-amber-600 rounded px-2 py-1 flex items-center gap-2 text-sm">
-                    <span className="font-mono">{pair}</span>
+                  <div key={index} style={enigmaStyles.plugChip}>
+                    <span style={{fontFamily: 'monospace'}}>{pair}</span>
                     <button
                       onClick={() => removePlugboardPair(pair)}
-                      className="text-amber-200 hover:text-white"
+                      style={enigmaStyles.removeButton}
                     >
                       ×
                     </button>
@@ -333,28 +335,20 @@ const EnigmaInterface: React.FC = () => {
           </div>
 
           {/* Right Panel - Message Processing */}
-          <div className="space-y-6">
+          <div style={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
             
             {/* Mode Selection */}
-            <div className="bg-white rounded-lg p-4 shadow-lg">
-              <div className="flex gap-4 mb-4">
+            <div style={enigmaStyles.whitePanel}>
+              <div style={enigmaStyles.modeButtons}>
                 <button
                   onClick={() => setMode('encrypt')}
-                  className={`flex-1 py-2 px-4 rounded font-medium transition-colors ${
-                    mode === 'encrypt' 
-                      ? 'bg-green-600 text-white' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
+                  style={enigmaStyles.modeButton(mode === 'encrypt')}
                 >
                   🔒 Encrypt
                 </button>
                 <button
                   onClick={() => setMode('decrypt')}
-                  className={`flex-1 py-2 px-4 rounded font-medium transition-colors ${
-                    mode === 'decrypt' 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
+                  style={enigmaStyles.modeButton(mode === 'decrypt')}
                 >
                   🔓 Decrypt
                 </button>
@@ -362,51 +356,45 @@ const EnigmaInterface: React.FC = () => {
             </div>
 
             {/* Input/Output */}
-            <div className="bg-white rounded-lg p-6 shadow-lg">
-              <div className="space-y-4">
+            <div style={enigmaStyles.whitePanel}>
+              <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label style={{...enigmaStyles.label, color: '#374151', marginBottom: '8px'}}>
                     Input Message
                   </label>
                   <textarea
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
-                    className="w-full border border-gray-300 rounded px-3 py-2 h-24 font-mono resize-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    style={enigmaStyles.textarea}
                     placeholder="Enter your message here..."
                   />
                 </div>
 
-                <div className="flex gap-4">
+                <div style={enigmaStyles.buttonRow}>
                   <button
                     onClick={processMessage}
                     disabled={!inputMessage.trim() || isProcessing}
-                    className={`flex-1 py-3 px-6 rounded font-medium transition-colors ${
-                      !inputMessage.trim() || isProcessing
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : mode === 'encrypt'
-                        ? 'bg-green-600 hover:bg-green-700 text-white'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}
+                    style={enigmaStyles.processButton(!inputMessage.trim() || isProcessing)}
                   >
                     {isProcessing ? '⚙️ Processing...' : `${mode === 'encrypt' ? '🔒 Encrypt' : '🔓 Decrypt'} Message`}
                   </button>
                   
                   <button
                     onClick={resetMachine}
-                    className="px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded font-medium transition-colors"
+                    style={enigmaStyles.resetButton}
                   >
                     Reset
                   </button>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label style={{...enigmaStyles.label, color: '#374151', marginBottom: '8px'}}>
                     Output Message
                   </label>
                   <textarea
                     value={outputMessage}
                     readOnly
-                    className="w-full border border-gray-300 rounded px-3 py-2 h-24 font-mono bg-gray-50 resize-none"
+                    style={enigmaStyles.readOnlyTextarea}
                     placeholder="Processed message will appear here..."
                   />
                 </div>
@@ -414,7 +402,7 @@ const EnigmaInterface: React.FC = () => {
                 {outputMessage && (
                   <button
                     onClick={() => navigator.clipboard.writeText(outputMessage)}
-                    className="w-full py-2 px-4 bg-amber-600 hover:bg-amber-700 text-white rounded font-medium transition-colors"
+                    style={enigmaStyles.copyButton}
                   >
                     📋 Copy to Clipboard
                   </button>
@@ -423,29 +411,29 @@ const EnigmaInterface: React.FC = () => {
             </div>
 
             {/* Machine Status */}
-            <div className="bg-gray-800 rounded-lg p-4 text-white font-mono">
-              <h3 className="text-lg font-semibold mb-3">📊 Machine Status</h3>
-              <div className="grid grid-cols-3 gap-4 text-center">
+            <div style={enigmaStyles.statusPanel}>
+              <h3 style={{...enigmaStyles.sectionTitle, marginBottom: '12px'}}>📊 Machine Status</h3>
+              <div style={enigmaStyles.statusGrid}>
                 {rotorPositions.map((pos, index) => (
-                  <div key={index}>
-                    <div className="text-sm text-gray-400">Rotor {index + 1}</div>
-                    <div className="text-2xl font-bold">{positionToLetter(pos)}</div>
-                    <div className="text-xs text-gray-500">({selectedRotors[index]})</div>
+                  <div key={index} style={enigmaStyles.statusItem}>
+                    <div style={enigmaStyles.statusLabel}>Rotor {index + 1}</div>
+                    <div style={enigmaStyles.statusValue}>{positionToLetter(pos)}</div>
+                    <div style={enigmaStyles.statusSmall}>({selectedRotors[index]})</div>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 pt-4 border-t border-gray-700">
-                <div className="text-sm text-gray-400 mb-1">Active Plugs: {plugboardPairs.length}/10</div>
-                <div className="text-xs text-gray-500">Reflector: Type {reflectorType}</div>
+              <div style={enigmaStyles.statusFooter}>
+                <div style={{...enigmaStyles.statusSmall, marginBottom: '4px'}}>Active Plugs: {plugboardPairs.length}/10</div>
+                <div style={enigmaStyles.statusSmall}>Reflector: Type {reflectorType}</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8 text-amber-700 text-sm">
+        <div style={enigmaStyles.footer}>
           <p>Historical recreation of the WWII Enigma encryption machine</p>
-          <p>Based on original C implementation with enhanced features</p>
+          <p>Based on your original C implementation with enhanced features</p>
         </div>
       </div>
     </div>
