@@ -433,7 +433,6 @@ const EnigmaInterface: React.FC = () => {
         {/* Footer */}
         <div style={enigmaStyles.footer}>
           <p>Historical recreation of the WWII Enigma encryption machine</p>
-          <p>Based on your original C implementation with enhanced features</p>
         </div>
       </div>
     </div>
